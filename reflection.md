@@ -13,7 +13,7 @@
 
 - Did your design change during implementation?
 - If yes, describe at least one change and why you made it.
-
+    We made the schedulrer more simplier 
 ---
 
 ## 2. Scheduling Logic and Tradeoffs
@@ -22,7 +22,7 @@
 
 - What constraints does your scheduler consider (for example: time, priority, preferences)?
 - How did you decide which constraints mattered most?
-
+    Mostly time and preferences
 **b. Tradeoffs**
 
 - Describe one tradeoff your scheduler makes.

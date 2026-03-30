@@ -1,4 +1,6 @@
-from pawpal_system import DailyScheduler, Owner, Pet, Task, TaskPriority
+from datetime import date
+
+from pawpal_system import DailyScheduler, DueWindow, Owner, Pet, Task, TaskPriority
 
 
 def build_sample_owner() -> Owner:
@@ -19,6 +21,8 @@ def build_sample_owner() -> Owner:
             title="Breakfast",
             duration_minutes=15,
             priority=TaskPriority.HIGH,
+            due_window=DueWindow.MORNING,
+            due_date=date.today(),
         )
     )
     luna.add_task(
@@ -26,6 +30,8 @@ def build_sample_owner() -> Owner:
             title="Litter Box Cleanup",
             duration_minutes=10,
             priority=TaskPriority.MEDIUM,
+            due_window=DueWindow.MORNING,
+            due_date=date.today(),
         )
     )
     luna.add_task(
@@ -81,6 +87,13 @@ def print_schedule() -> None:
 
     print("\nSummary:")
     print(plan.summary())
+
+    print("\nWarnings:")
+    if not plan.warnings:
+        print("- None")
+    else:
+        for warning in plan.warnings:
+            print(f"- {warning}")
 
 
 if __name__ == "__main__":
