@@ -5,7 +5,9 @@
 **a. Initial design**
 
 - Briefly describe your initial UML design.
+    We have a very simple Diagram with the start of the project.
 - What classes did you include, and what responsibilities did you assign to each?
+    We have Pet(name, species, age), CareTask(title, category), DailyScheduler(Score_task), CarePlan(plan, notes)
 
 **b. Design changes**
 
