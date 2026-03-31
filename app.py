@@ -1,3 +1,5 @@
+from datetime import date
+
 import streamlit as st
 
 from pawpal_system import (
@@ -108,10 +110,13 @@ if st.session_state.current_pet is not None:
                 "Title": t.title,
                 "Duration (min)": t.duration_minutes,
                 "Priority": t.priority.value,
-                "Completed": "✓" if t.completed else "",
+                "Due Date": t.due_date.isoformat() if t.due_date else "",
+                "Due Window": t.due_window.value,
+                "Completed": "Yes" if t.completed else "No",
             }
             for t in current_pet.tasks
         ]
+        task_data.sort(key=lambda row: (row["Completed"], row["Title"].lower()))
         st.table(task_data)
     else:
         st.info("No tasks yet. Add one above.")
@@ -144,15 +149,102 @@ if st.button("Generate schedule"):
         with col3:
             st.metric("Total Minutes", plan.total_minutes())
 
-        if plan.scheduled_tasks:
-            st.subheader("✓ Scheduled Tasks")
-            for idx, task in enumerate(plan.scheduled_tasks, 1):
-                st.write(f"{idx}. **{task.title}** ({task.duration_minutes} min, {task.priority.value})")
+        task_owner: dict[str, str] = {}
+        for pet in owner.pets:
+            for task in pet.tasks:
+                task_owner[task.task_id] = pet.name
 
-        if plan.skipped_tasks:
-            st.subheader("✗ Skipped Tasks (time limit reached)")
-            for idx, task in enumerate(plan.skipped_tasks, 1):
-                st.write(f"{idx}. {task.title} ({task.duration_minutes} min, {task.priority.value})")
+        combined_rows: list[dict[str, str | int]] = []
+        for task in plan.scheduled_tasks:
+            combined_rows.append(
+                {
+                    "Status": "Scheduled",
+                    "Pet": task_owner.get(task.task_id, "Unknown"),
+                    "Title": task.title,
+                    "Priority": task.priority.value,
+                    "Duration (min)": task.duration_minutes,
+                    "Due Date": task.due_date.isoformat() if task.due_date else "",
+                    "Due Window": task.due_window.value,
+                }
+            )
+
+        for task in plan.skipped_tasks:
+            combined_rows.append(
+                {
+                    "Status": "Skipped",
+                    "Pet": task_owner.get(task.task_id, "Unknown"),
+                    "Title": task.title,
+                    "Priority": task.priority.value,
+                    "Duration (min)": task.duration_minutes,
+                    "Due Date": task.due_date.isoformat() if task.due_date else "",
+                    "Due Window": task.due_window.value,
+                }
+            )
+
+        st.subheader("Task Results")
+        filter_col1, filter_col2, filter_col3 = st.columns(3)
+        with filter_col1:
+            status_filter = st.multiselect(
+                "Filter by status",
+                ["Scheduled", "Skipped"],
+                default=["Scheduled", "Skipped"],
+            )
+        with filter_col2:
+            priority_filter = st.multiselect(
+                "Filter by priority",
+                ["high", "medium", "low"],
+                default=["high", "medium", "low"],
+            )
+        with filter_col3:
+            sort_by = st.selectbox(
+                "Sort by",
+                ["Due Date", "Priority", "Duration", "Title"],
+                index=0,
+            )
+
+        priority_rank = {"high": 0, "medium": 1, "low": 2}
+        filtered_rows = [
+            row
+            for row in combined_rows
+            if row["Status"] in status_filter and row["Priority"] in priority_filter
+        ]
+
+        def row_sort_key(row: dict[str, str | int]) -> tuple:
+            due_date_value = row["Due Date"] if row["Due Date"] else date.max.isoformat()
+            if sort_by == "Priority":
+                return (priority_rank.get(str(row["Priority"]), 99), str(row["Title"]).lower())
+            if sort_by == "Duration":
+                return (int(row["Duration (min)"]), str(row["Title"]).lower())
+            if sort_by == "Title":
+                return (str(row["Title"]).lower(),)
+            return (due_date_value, str(row["Due Window"]).lower(), str(row["Title"]).lower())
+
+        filtered_rows.sort(key=row_sort_key)
+
+        if filtered_rows:
+            st.success(f"Showing {len(filtered_rows)} task(s) after filtering.")
+            st.table(filtered_rows)
+        else:
+            st.warning("No tasks match the selected filters.")
+
+        if plan.warnings:
+            for warning in plan.warnings:
+                st.warning(warning)
+
+        if plan.conflicts:
+            st.warning(f"Detected {len(plan.conflicts)} scheduling conflict(s).")
+            conflict_rows = [
+                {
+                    "Task A": conflict.task_a_title,
+                    "Pet A": conflict.pet_a,
+                    "Task B": conflict.task_b_title,
+                    "Pet B": conflict.pet_b,
+                    "Due Date": conflict.due_date.isoformat(),
+                    "Window": conflict.due_window.value,
+                }
+                for conflict in plan.conflicts
+            ]
+            st.table(conflict_rows)
 
         with st.expander("Scheduling Reasoning"):
             for note in plan.reasoning_notes:
