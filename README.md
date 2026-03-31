@@ -47,3 +47,7 @@ pip install -r requirements.txt
 Use the project docstring guide to keep code documentation consistent:
 
 - [`docs/docstrings.md`](docs/docstrings.md)
+
+## Testing PawPal+
+
+The test suite covers core scheduler behavior and key edge cases. Tests verify task lifecycle actions (add, complete, remove), recurrence logic (daily tasks create next-day follow-ups while one-time tasks do not), and scheduling correctness under time limits and constraints. They also validate plan output ordering, owner-level aggregation, and conflict detection when multiple tasks share the same due date and time window.

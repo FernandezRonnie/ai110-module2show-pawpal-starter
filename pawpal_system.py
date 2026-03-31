@@ -292,6 +292,12 @@ class DailyScheduler:
         TaskPriority.MEDIUM: 2,
         TaskPriority.LOW: 1,
     }
+    WINDOW_ORDER = {
+        DueWindow.MORNING: 0,
+        DueWindow.AFTERNOON: 1,
+        DueWindow.EVENING: 2,
+        DueWindow.ANYTIME: 3,
+    }
 
     def __init__(
         self,
@@ -365,6 +371,12 @@ class DailyScheduler:
 
         # Return combined sorted list (daily first, then weekly, then others)
         return daily_tasks + weekly_tasks + other_tasks
+
+    def _chronological_sort_key(self, task: Task, plan_date: date) -> tuple[date, int, str]:
+        """Return a key for chronological task display order in plan output."""
+        task_date = task.due_date if task.due_date is not None else plan_date
+        window_rank = self.WINDOW_ORDER.get(task.due_window, 3)
+        return (task_date, window_rank, task.title.lower())
 
     def _detect_schedule_conflicts(
         self,
@@ -550,6 +562,11 @@ class DailyScheduler:
                     f"{conflict.due_window.value} on {conflict.due_date.isoformat()} "
                     f"[{conflict_scope}]."
                 )
+
+        # Return schedule in chronological order for predictable UI rendering.
+        plan.scheduled_tasks.sort(
+            key=lambda task: self._chronological_sort_key(task, plan.plan_date)
+        )
 
         return plan
 
