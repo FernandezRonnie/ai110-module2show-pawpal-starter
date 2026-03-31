@@ -41,3 +41,9 @@ pip install -r requirements.txt
 5. Add tests to verify key behaviors.
 6. Connect your logic to the Streamlit UI in `app.py`.
 7. Refine UML so it matches what you actually built.
+
+## Documentation standards
+
+Use the project docstring guide to keep code documentation consistent:
+
+- [`docs/docstrings.md`](docs/docstrings.md)
