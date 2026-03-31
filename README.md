@@ -22,6 +22,17 @@ Your final app should:
 - Display the plan clearly (and ideally explain the reasoning)
 - Include tests for the most important scheduling behaviors
 
+## Features
+
+- Sorting by priority score and frequency groups (daily, weekly, then other recurring types)
+- Chronological schedule output ordering by due date and time window
+- Time-budget scheduling that prioritizes high-priority tasks and skips overflow tasks
+- Constraint-aware planning (effective minutes, preferred windows bonus, optional max task cap)
+- Conflict warnings for duplicate date/time slots, with detailed pairwise conflict reporting
+- Daily and weekly recurrence generation when a recurring task is marked complete
+- Owner-level aggregation across multiple pets with per-task pet ownership mapping
+- Fast O(1) pet and task lookup using internal dictionaries
+
 ## Getting started
 
 ### Setup
@@ -31,6 +42,31 @@ python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
+
+## Demo
+
+Use the commands below to demo both the CLI and Streamlit versions.
+
+### CLI demo
+
+```bash
+python main.py
+```
+
+### Streamlit demo
+
+```bash
+streamlit run app.py
+```
+
+### Demo screenshots
+
+
+```html
+<a href="/course_images/ai110/Screenshot%20from%202026-03-30%2021-40-41.png" target="_blank"><img src='/course_images/ai110/Screenshot%20from%202026-03-30%2021-40-41.png' title='PawPal App' width='' alt='PawPal App' class='center-block' /></a>
+<a href="/course_images/ai110/Screenshot%20from%202026-03-30%2021-40-46.png" target="_blank"><img src='/course_images/ai110/Screenshot%20from%202026-03-30%2021-40-46.png' title='PawPal App - Schedule View' width='' alt='PawPal App - Schedule View' class='center-block' /></a>
+```
+
 
 ### Suggested workflow
 

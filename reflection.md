@@ -37,10 +37,13 @@
 - How did you use AI tools during this project (for example: design brainstorming, debugging, refactoring)?
 - What kinds of prompts or questions were most helpful?
 
+i used Ai tools make more clear the design and debugg more effeciently. Lots of help from the AI was useful when tinkerng the code and making things more streamline. 
+
 **b. Judgment and verification**
 
 - Describe one moment where you did not accept an AI suggestion as-is.
 - How did you evaluate or verify what the AI suggested?
+    AI wanted to overcomplicate the scheduling and also making more files which wouldve made the program more overbloated.
 
 ---
 
@@ -51,10 +54,14 @@
 - What behaviors did you test?
 - Why were these tests important?
 
+    We tested for task look ups, priorties and making sure that the program did not break so easily. These test are important because the most simpiliest things can be overlooked.
+
 **b. Confidence**
 
 - How confident are you that your scheduler works correctly?
 - What edge cases would you test next if you had more time?
+
+I fairly confidant that the scheduler works as intented. I would stress test it so the worst and least problems are found. 
 
 ---
 
@@ -62,12 +69,12 @@
 
 **a. What went well**
 
-- What part of this project are you most satisfied with?
+- What part of this project are you most satisfied with? Im not very familer it UI, so having it work as well as it did, made me very satisfied.
 
 **b. What you would improve**
 
-- If you had another iteration, what would you improve or redesign?
+- If you had another iteration, what would you improve or redesign? I would improved the methods of inputing data and how its persented. 
 
 **c. Key takeaway**
 
-- What is one important thing you learned about designing systems or working with AI on this project?
+- What is one important thing you learned about designing systems or working with AI on this project? That we need to use a little bit of brain power and not let AI do all of the work but rather have be a tool, not the driving force.
